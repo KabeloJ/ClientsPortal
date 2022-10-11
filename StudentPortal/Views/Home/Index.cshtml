@@ -1,8 +1,152 @@
-﻿@{
+﻿@model Core.User.Models.UserExtModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<body onload="Load()">
+    <div class="p-2">
+        <h3>My Profile</h3>
+        @if(Model != null)
+        {
+            <div class="row">
+                <div class="p-2 m-2 col-md-10 shadow-lg bg-white row">
+                    <div class="col-md-5" align="center">
+                        <img src="User.jfif" class="w-50" alt="User Icon"/>
+                    </div>
+                    <table class="table table-borderless col-md-5">
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td align="right"><a href="/User/Edit/@Model.Id" class="btn btn-primary btn-sm">Profile</a></td>
+                            </tr>
+                            <tr>
+                                <th align="left">Names :</th>
+                                <td align="right">@Model.FirstName @Model.LastName</td>
+                            </tr>
+                            <tr>
+                                <th align="left">Gender :</th>
+                                <td align="right">@Model.Gender</td>
+                            </tr>
+                            <tr>
+                                <th align="left">County :</th>
+                                <td align="right">@Model.Country</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div id="Contacts" class="p-1 m-1 col-md-5 shadow-lg bg-white"></div>
+            <div id="Interests" class="p-1 m-1 col-md-5 shadow-lg bg-white"></div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    function Load() {
+        GetContacts();
+        GetInterests();
+    }
+
+    function GetContacts() {
+        var settings = {
+            "url": "/Home/Contacts",
+            "method": "GET",
+        };
+
+        $.ajax(settings).done(function (response) {
+            document.getElementById("Contacts").innerHTML = response;
+        });
+    }
+
+    function GetInterests() {
+        var settings = {
+            "url": "/Home/Interests",
+            "method": "GET",
+        };
+
+        $.ajax(settings).done(function (response) {
+            document.getElementById("Interests").innerHTML = response;
+        });
+    }
+
+    function newContact() {
+        var settings = {
+            "url": "/Home/AddContact",
+            "method": "GET",
+        };
+
+        $.ajax(settings).done(function (response) {
+            document.getElementById("newContact").innerHTML = response;
+        });
+    }
+
+    function newInterest() {
+        var settings = {
+            "url": "/Home/AddInterest",
+            "method": "GET",
+        };
+
+        $.ajax(settings).done(function (response) {
+            document.getElementById("newInterest").innerHTML = response;
+        });
+    }
+
+    function SubmitContact() {
+        var conType = document.getElementById("ContactType").value;
+        var conNum = document.getElementById("ContactNumber").value;
+
+        document.getElementById("ContactNumberSpan").innerText = "";
+        document.getElementById("ContactTypeSpan").innerText = "";
+
+        if (conType == null || conType === "") {
+            document.getElementById("ContactTypeSpan").innerText = "Contact type required";
+        }
+        if (conNum == null || conNum === "") {
+            document.getElementById("ContactNumberSpan").innerText = "Contact Number required";
+        }
+
+        var settings = {
+            "url": "/Home/AddContact",
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+                "ContactType": document.getElementById("ContactType").value,
+                "ContactNumber": document.getElementById("ContactNumber").value
+            }),
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            Load();
+        });
+    }
+
+    function SubmitInterest() {
+        var interest = document.getElementById("Interest").value;
+
+        document.getElementById("InterestSpan").innerText = "";
+
+        if (interest == null || interest === "") {
+            document.getElementById("InterestSpan").innerText = "Interest is required";
+        }
+        var settings = {
+            "url": "/Home/AddInterest",
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+                "Interest1": document.getElementById("Interest").value,
+            }),
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            Load();
+        });
+    }
+</script>

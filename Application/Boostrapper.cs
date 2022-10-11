@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Application.User;
+using Core.User.Application;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace Application
@@ -7,7 +9,7 @@ namespace Application
     {
         public static void AddApp(this IServiceCollection services)
         {
-
+            services.AddSingleton<IUserServices, UserServices>();
         }
     }
 }

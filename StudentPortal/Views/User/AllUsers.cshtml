@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Core.User.Models.UserExtModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+
+<h3>Users</h3>
+
+<div class="overflow-auto">
+    <table class="table" id="UsersTable">
+        <thead>
+            <tr>
+                <th>
+                    Names
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Country)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gender)
+                </th>
+                <th>
+                    Date Of Birth
+                </th>
+                <th>
+                    Profile Complete
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Where(x=>x.AccessType == 0))
+            {
+                <tr>
+                    <td>
+                        @item.FirstName @item.LastName
+                    </td>
+                    <td>
+                        @item.Email
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gender)
+                    </td>
+                    <td>
+                        @item.DateOfBirth.ToShortDateString()
+                    </td>
+                    <td>
+                        @if (item.UserCompletedProfile)
+                        {
+                            <button disabled class="btn btn-success">Complete</button>
+                        }
+                        else
+                        {
+                            <button disabled class="btn btn-danger">Not Complete</button>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

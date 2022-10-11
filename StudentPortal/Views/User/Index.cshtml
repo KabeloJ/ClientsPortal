@@ -1,0 +1,32 @@
+﻿
+<body>
+    <div id="page">
+
+    </div>
+</body>
+<script type="text/javascript">
+    Users();
+              
+    window.addEventListener('load', function () {
+        var fetchInterval = 5000;
+        setInterval(Users, fetchInterval);
+    });
+    function Users() {
+        var settings = {
+            "url": "/User/AllUsers",
+            "method": "GET",
+        };
+
+        $.ajax(settings).done(function (response) {
+            document.getElementById("page").innerHTML = response;
+
+            //$(document).ready(function () {
+            //    $('#UsersTable').DataTable();
+            //});
+        });
+    }
+
+</script>
+
+<script>
+</script>

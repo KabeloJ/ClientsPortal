@@ -1,0 +1,15 @@
+﻿@model Core.User.Models.InterestModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div id="InterestErrors">
+    </div>
+    <div class="form-group col-md-5 m-1">
+        <span id="InterestSpan" class="text-danger small"></span>
+        <input id="Interest" class="form-control" placeholder="Interest here" />
+    </div>
+    <div class="form-group col-md-2 m-1">
+        <input type="button" onclick="SubmitInterest()" value="Create" class="btn btn-primary" />
+    </div>
+</div>

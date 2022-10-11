@@ -42,9 +42,9 @@ namespace StudentPortal.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
             public string Email { get; set; }
+            [Required(ErrorMessage = "Email or username is required")]
+            public string UserName { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
@@ -74,14 +74,30 @@ namespace StudentPortal.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                if (IsEmail(Input.UserName))
+                {
+                    if (CheckIfValidEmail(Input.UserName))
+                    {
+                        Input.Email = await GetUserNameByEmail(Input.UserName)?? "";
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "User a valid email or username");
+                        return Page();
+                    }
+                }
+                else
+                {
+                    Input.Email = Input.UserName??"";
+                }
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -105,6 +121,38 @@ namespace StudentPortal.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private bool IsEmail(string userName)
+        {
+            if (userName.Contains("@") && userName.Contains("."))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool CheckIfValidEmail(string userName)
+        {
+            if (userName != null)
+            {
+                if (userName.Contains("@") && userName.Contains(".") && !userName.Contains("@.") 
+                    && !userName.Contains(".@")
+                    && !userName.StartsWith("@")
+                    && !userName.StartsWith(".")
+                    && !userName.EndsWith(".")
+                    && !userName.EndsWith("@")
+                    )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        private async Task<string> GetUserNameByEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user?.UserName;
         }
     }
 }

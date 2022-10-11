@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using Access.Context;
+using AutoMapper;
+using Core.User.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,9 @@ namespace Access
         public MapProfile()
         {
             //Map your DBContext with Models
+            CreateMap<Contact, ContactModel>().ReverseMap();
+            CreateMap<Interest, InterestModel>().ReverseMap();
+            CreateMap<UserExt, UserExtModel>().ReverseMap();
         }
     }
 }

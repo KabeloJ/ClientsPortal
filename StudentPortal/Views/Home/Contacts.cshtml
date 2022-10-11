@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Core.User.Models.ContactModel>
+
+@{
+    Layout = null;
+}
+<div id="newContact">
+    
+</div>
+<table class="table table-sm small">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactNumber)
+            </th>
+            <th>
+                <button type="button" class="btn btn-primary btn-sm" onclick="newContact()">Add</button>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(x => x.ContactNumber != null))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactNumber)
+                </td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,115 @@
+﻿@model Core.User.Models.UserExtModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    @if (Model != null)
+    {
+        <div class="form-group">
+            <a href="/User/ResetPassword/@Model.Id" class="nav-link">Reset User Password</a>
+        </div>
+        <div class="row card shadow-lg p-2">
+            <h5>Personal Details</h5>
+            <hr />
+            <label class="col-sm-2 font-weight-bold ">
+                @Html.DisplayNameFor(model => model.FirstName)
+            </label>
+            <p class="col-sm-4">
+                @Html.DisplayFor(model => model.FirstName)
+            </p>
+            <label class="col-sm-2 font-weight-bold">
+                @Html.DisplayNameFor(model => model.LastName)
+            </label>
+            <p class="col-sm-4">
+                @Html.DisplayFor(model => model.LastName)
+            </p>
+            <label class="col-sm-2 font-weight-bold">
+                Access Level
+            </label>
+            <p class="col-sm-4">
+                @Html.DisplayFor(model => model.AccessType)
+            </p>
+            <label class="col-sm-2 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Country)
+            </label>
+            <p class="col-sm-4">
+                @Html.DisplayFor(model => model.Country)
+            </p>
+            <label class="col-sm-2 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Gender)
+            </label>
+            <p class="col-sm-4">
+                @Html.DisplayFor(model => model.Gender)
+            </p>
+            <label class="col-sm-2 font-weight-bold">
+                Date Of Birth
+            </label>
+            <p class="col-sm-4">
+                @Model.DateOfBirth.ToShortDateString()
+            </p>
+            <label class="col-sm-2 font-weight-bold">
+                Profile Completed
+            </label>
+            <p class="col-sm-4">
+                @if (Model.UserCompletedProfile)
+                {
+                    <button disabled class="btn btn-success">Complete</button>
+                }
+                else
+                {
+                    <button disabled class="btn btn-danger">Not Complete</button>
+                }
+            </p>
+        </div>
+        <div class="row">
+
+            @if (Model.Contacts != null && Model.Contacts.Count > 0)
+            {
+                <div class="col-md-5 card shadow-lg m-2">
+                    <h5>Contacts</h5>
+                    <hr />
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                            @foreach (var contact in Model.Contacts.OrderBy(x => x.ContactType))
+                            {
+                                <tr>
+                                    <th>@contact.ContactType</th>
+                                    <td>@contact.ContactNumber</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            @if (Model.Interests != null && Model.Interests.Count > 0)
+            {
+
+                <div class="col-md-5 card shadow-lg m-2">
+                    <h5>Interests</h5>
+                    <hr />
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                            @foreach (var interest in Model.Interests.OrderBy(x => x.Interest1))
+                            {
+                                <tr>
+                                    <td>@interest.Interest1</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div>
+            <p>Something went wrong trying to process your request.</p>
+        </div>
+    }
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

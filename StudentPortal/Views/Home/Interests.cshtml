@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Core.User.Models.InterestModel>
+
+@{
+    Layout = null;
+}
+
+
+<div id="newInterest">
+
+</div>
+<table class="table table-sm small">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Interest1)
+            </th>
+            <th><button class="btn btn-sm btn-primary" onclick="newInterest()">Add</button></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(x => x.Interest1 != null))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Interest1)
+                </td>
+                <td>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
