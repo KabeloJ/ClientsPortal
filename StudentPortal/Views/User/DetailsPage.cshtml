@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Details";
+}
+<body>
+    <div id="page">
+        <div align="center">
+            Loading...
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    var val = "";
+    window.addEventListener('load', function () {
+        val = '@ViewData["Id"]';
+        var fetchInterval = 5000;
+        setInterval(Refresh, fetchInterval);
+    });
+    function Refresh() {
+        var settings = {
+            "url": "/User/Details/" + val,
+            "method": "GET",
+        };
+        $.ajax(settings).done(function (response) {
+            document.getElementById("page").innerHTML = response;
+        });
+    }
+</script>

@@ -44,7 +44,7 @@ namespace StudentPortal.Areas.Identity.Pages.Account
             public string Code { get; set; }
         }
 
-        public IActionResult OnGet(string code = null)
+        public IActionResult OnGet(string email, string code = null)
         {
             if (code == null)
             {
@@ -54,6 +54,7 @@ namespace StudentPortal.Areas.Identity.Pages.Account
             {
                 Input = new InputModel
                 {
+                    Email = email,
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
                 };
                 return Page();

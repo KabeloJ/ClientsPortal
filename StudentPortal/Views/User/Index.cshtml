@@ -6,11 +6,6 @@
 </body>
 <script type="text/javascript">
     Users();
-              
-    window.addEventListener('load', function () {
-        var fetchInterval = 5000;
-        setInterval(Users, fetchInterval);
-    });
     function Users() {
         var settings = {
             "url": "/User/AllUsers",
@@ -20,9 +15,9 @@
         $.ajax(settings).done(function (response) {
             document.getElementById("page").innerHTML = response;
 
-            //$(document).ready(function () {
-            //    $('#UsersTable').DataTable();
-            //});
+            $(document).ready(function () {
+                $('#UsersTable').DataTable();
+            });
         });
     }
 

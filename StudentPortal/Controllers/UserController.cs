@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using ClientsPortal.Models;
 using Core.User.Application;
 using Core.User.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClientsPortal.Controllers
@@ -49,42 +51,53 @@ namespace ClientsPortal.Controllers
             {
                 return NotFound();
             }
-
-            var userExt = _userServices.GetUser(id);
-            if (userExt == null)
+            var user = _userServices.GetUser(_userManager.GetUserId(User));
+            if (user != null)
             {
-                return NotFound();
+                var userExt = _userServices.GetUser(id);
+                if (user.AccessType > 0)
+                {
+                    userExt.AdminViewing = true;
+                }
+                if (userExt != null)
+                {
+                    return View(userExt);
+                }
             }
-            return View(userExt);
+            return NotFound();
         }
-        //[Authorize]
-        //public IActionResult ResetPassword(string id)
-        //{
-        //    if (id != null)
-        //    {
-        //        var user = _userServices.GetUser(_userManager.GetUserId(User));
-        //        if (user != null && user.AccessType > 0)
-        //        {
-        //            return View(new PasswordModel() { UserId = id });
-        //        }
-        //        return Unauthorized();
-        //    }
-        //    return NotFound();
-        //}
-        //[Authorize]
-        //public IActionResult ResetPassword(PasswordModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = _userServices.GetUser(_userManager.GetUserId(User));
-        //        if (user != null && user.AccessType > 0)
-        //        {
-        //            var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
-        //        }
-        //        return BadRequest();
-        //    }
-        //    return View(model);
-        //}
+        [Authorize]
+        public async Task<IActionResult> ResetPassword(string id)
+        {
+            if (id != null)
+            {
+                var currentUser = _userServices.GetUser(_userManager.GetUserId(User));
+                if (currentUser != null && currentUser.AccessType > 0)
+                {
+                    var user = await _userManager.FindByIdAsync(id);
+                    if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                    {
+                        return Redirect("/Home/Error");
+                    }
+
+                    // For more information on how to enable account confirmation and password reset please 
+                    // visit https://go.microsoft.com/fwlink/?LinkID=532713
+                    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    string email = user.Email;
+                    var callbackUrl = Url.Page(
+                        "/Account/ResetPassword",
+                        pageHandler: null,
+                        values: new { area = "Identity", code },
+                        protocol: Request.Scheme);
+                    string redirectUrl = HtmlEncoder.Default.Encode(callbackUrl);
+                    redirectUrl = redirectUrl + "&email=" + email;
+                    return Redirect(redirectUrl);
+                }
+                return Unauthorized();
+            }
+            return NotFound();
+        }
         [Authorize]
         public IActionResult Details(string id)
         {
@@ -97,6 +110,12 @@ namespace ClientsPortal.Controllers
             {
                 return NotFound();
             }
+        }
+        [Authorize]
+        public IActionResult DetailsPage(string id)
+        {
+            ViewData["Id"] = id;
+            return View();
         }
 
         // POST: User/Edit/5

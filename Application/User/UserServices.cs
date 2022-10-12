@@ -24,9 +24,12 @@ namespace Application.User
         }
         public UserExtModel GetUser(string id)
         {
+            var user = _aspUsers.GetUser(id);
             var model = _data.GetById(id);
-            if (model != null)
+            if (model != null && user != null)
             {
+                model.UserName = user.UserName;
+                model.Email = user.Email;
                 model.Interests = GetInterets(id);
                 model.Contacts = GetContacts(id);
             }

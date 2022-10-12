@@ -10,5 +10,6 @@ namespace Core.User.Access
     public interface IAspUserAccess
     {
         List<UserExtModel> GetUsers();
+        UserExtModel GetUser(string Id);
     }
 }

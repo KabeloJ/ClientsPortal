@@ -25,6 +25,7 @@ namespace Core.User.Models
         public bool UserCompletedProfile { get; set; }
         public List<InterestModel> Interests { get; set; }
         public List<ContactModel> Contacts { get; set; }
+        public bool AdminViewing { get; set; }
 
     }
 }

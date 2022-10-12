@@ -11,6 +11,23 @@ namespace Access.DataAccess
 {
     public class AspUserAccess: IAspUserAccess
     {
+        public UserExtModel GetUser(string Id)
+        {
+            using (var db = new ClientsPortalContext())
+            {
+                var data = db.AspNetUsers.Select(x => new { x.UserName, x.Email, x.Id })
+                    .Where(x => x.Id == Id).FirstOrDefault();
+                var user = new UserExtModel();
+                if (data != null)
+                {
+                    user.Id = data.Id;
+                    user.UserName = data.UserName;
+                    user.Email = data.Email;
+                }
+                return user;
+            }
+        }
+
         public List<UserExtModel> GetUsers()
         {
             using (var db = new ClientsPortalContext())
