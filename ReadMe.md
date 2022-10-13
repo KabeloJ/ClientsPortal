@@ -1,4 +1,4 @@
-STEP 1:
+## STEP 1:
 
 Create database using the ClientsPortal.sql script
 
